@@ -4,6 +4,8 @@
 Icotray is a CLI tool to create custom acticons in the system tray.
 An acticon is an icon in the systemtray which has one or multiple actions associated with it.
 
+To download, head over to the [releases](https://github.com/ITCMD/Icotray/releases) and get the most recent copy of the executable.
+
 ## Table of Contents
 
 - [Icotray](#icotray)
