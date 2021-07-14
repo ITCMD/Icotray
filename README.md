@@ -6,6 +6,8 @@ An acticon is an icon in the systemtray which has one or multiple actions associ
 
 To download, head over to the [releases](https://github.com/ITCMD/Icotray/releases) and get the most recent copy of the executable.
 
+This tool was made for me by [Mnoronen on Fiverr](https://www.fiverr.com/mnoronen), I very much recommend him.
+
 ## Table of Contents
 
 - [Icotray](#icotray)
