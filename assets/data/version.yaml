@@ -1,0 +1,7 @@
+ref:
+  name: $CI_COMMIT_REF_NAME
+  slug: $CI_COMMIT_REF_SLUG
+
+commit:
+  sha: $CI_COMMIT_SHA
+  shortSha: $CI_COMMIT_SHORT_SHA
