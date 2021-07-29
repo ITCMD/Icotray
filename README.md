@@ -2,16 +2,19 @@
 # Icotray
 
 Icotray is a CLI tool to create custom acticons in the system tray.
-An acticon is an icon in the systemtray which has one or multiple actions associated with it.
+An *acticon* is an icon in the systemtray which has one or multiple actions associated with it.
 
 To download, head over to the [releases](https://github.com/ITCMD/Icotray/releases) and get the most recent copy of the executable.
 
 This tool was made for me by [Mnoronen on Fiverr](https://www.fiverr.com/mnoronen), I very much recommend him.
 
+If you detect any bugs, please report them on the issues page.
+
 ## Table of Contents
 
 - [Icotray](#icotray)
   - [Table of Contents](#table-of-contents)
+  - [Legacy Edition](#Legacy Edition)
   - [Usage](#usage)
     - [Root Command](#root-command)
     - [Add Command](#add-command)
@@ -23,6 +26,10 @@ This tool was made for me by [Mnoronen on Fiverr](https://www.fiverr.com/mnorone
     - [Building locally](#building-locally)
     - [Building using GitLab](#building-using-gitlab)
       - [Required Variables](#required-variables)
+
+## Legacy Edition
+
+The legacy edition of this code is more compatible with non-windows systems, such as a Unix environment. With some simple modifications, it could be built for such systems. The newer edition uses a Microsoft API that is incompatible with other systems. As such, the Legacy edition is available in the [Legacy]() folder for those wishing to build for such environments. We would love to include a release for a Unix environment, so if anyone would like to volunteer to do so, let us know.
 
 ## Usage
 
@@ -77,7 +84,7 @@ Please note that this feature may not work in all shells.
 
 
 # ICON
-If no own icon is provided via the command flag, the default icon will be used.
+If no own icon is provided via the command flag, the default icon will be used.        
 The file type of the icons depends on the operating system.
 For example: Windows only accepts .ico files for the icons in the system tray.
 
@@ -86,9 +93,8 @@ For example: Windows only accepts .ico files for the icons in the system tray.
 The actions of the command can be provided as a list of key-value pairs.
 The provided actions will be shown in a list format when clicking on the icon
 in the system tray. Using the '--quittable' flag will ad an option to quit the program.
-The key represents the title of the item and the key the action which will be run
+The key represents the title of the item and the key the action which will be run      
 when clicking on the item.
-
 
 ## RUN MODES
 ### DEFAULT
@@ -116,6 +122,12 @@ So >>"Name"="cmd:bash -c echo\ \"Hello\ World\"\ >\ ~/myfile.txt"<< will result 
     Program     :  "bash"
     Arguments   :  ["-c", "echo Hello World > ~/myfile.txt"]
 
+## Default Action
+By providing an action with the '--default' / '-d' flag, the action will be
+interpreted as the 'default' action. The action passed with the flag will
+be run when double-clicking the acticon. In order to open the context menu,
+the acticon will have to be right-clicked.
+
 
 # EXAMPLES
 ## Basic acticon with some actions
@@ -137,15 +149,16 @@ Usage:
   icotray add [<identifier>] [flags]
 
 Flags:
-  -t, --title string              Title of the acticon
-  -i, --icon string               Path to the icon to use for the acticon
-  -o, --hover string              Text shown when hovering over the acticon
-  -a, --actions stringToString    Menu-items providing the name of the item together with the action in the form: "First Item"="action" (default [])
-  -n, --item-name stringArray     Alternative way to configure the menu-items. Must be used together with the 'item-action' flag
-  -c, --item-action stringArray   The action to associate with the 'item-name' flag. For each 'item-action' there must be an 'item-name'
-  -q, --quittable                 Whether to append a 'quit' Option to the acticon or not
-  -r, --interactive               Build the acticon interactively
-  -p, --print                     Print the command for the final configuration. Useful if used together with the 'interactive' flag
+  -t, --title string              Title of the acticon { -t "<title text>" }
+  -i, --icon string               Path to the icon to use for the acticon { -i "<path to icon>"}
+  -o, --hover string              Text shown when hovering over the acticon { -o "<hover text>" }
+  -d, --default string            Default action which will be executed when double-clicking the acticon { -d "<action>"
+  -a, --actions stringToString    Menu-items providing the name of the item together with the action. { -a "<t1>"="<a1>","<t2>"="<a2>","<..>"="<..>" } (default [])
+  -n, --item-name stringArray     Alternative way to configure the menu-items. Must be used together with the 'item-action' flag. { -n "<t1>","<t2>","<..>"}
+  -c, --item-action stringArray   The action to associate with the 'item-name' flag. For each 'item-action' there must be an 'item-name'. { -c "<a1>","<a2>","<..>" }
+  -q, --quittable                 Whether to append a 'quit' Option to the acticon or not { -q }
+  -r, --interactive               Build the acticon interactively { -r }
+  -p, --print                     Print the command for the final configuration. Useful if used together with the 'interactive' flag { -p }
   -h, --help                      help for add
 
 Global Flags:
@@ -170,7 +183,7 @@ The following list is sorted by importance of the library.
 - [spf13/cobra](https://github.com/spf13/cobra) - v1.2.1 - A widely used library for creating powerful modern CLI applications
   - [spf13/viper](https://github.com/spf13/viper) - v1.8.1 - A complete configuration solution for Go application including 12-Factor apps. This library is tightly integrated in [spf13/cobra](https://github.com/spf13/cobra)
   - [mitchellh/go-homedir](https://github.com/mitchellh/go-homedir) - v1.1.0 - A small library for detecting the user's home directory without using Cgo
-- [getlantern/systray](https://github.com/getlantern/systray) - v1.1.0 - Abstraction of the different system tray APIs for creating the actual tray icons.
+- [lxn/walk](https://github.com/lxn/walk) v0.0.0-20210112085537 - Windows Application Library Kit: Used as an abstraction for the windows system tray API for creating the acticons
 - [AlecAivazis/survey](https://github.com/AlecAivazis/survey/v2) - v2.2.14 - Library to create interactive 'survays' using inputs, selects, confirms, texts and so on.
 - [jinzhu/copier](https://github.com/jinzhu/copier) - v0.3.2 - Library for creating deep copies of Go structs
 - [josephspurrier/goversioninfo](https://github.com/josephspurrier/goversioninfo) - v1.2.0 - Microsoft Windows File Properties/Version Info and Icon Resource Generator for the Go Language
@@ -188,10 +201,10 @@ In order to build the program, you must either have Go installed, or set up the 
 
 Before being able to build the program locally, Go will have to be installed on the system. Refer to the [Go documentation](https://golang.org/doc/install) in order to get started.
 
-Icotray ueses the file located at `<projroot>/assets/data/version.yaml` to print out the information on the application version.
-Currently the file uses the GitLab variables, which will be replaced when running the GitLab pipeline. If you want to build the application locally, you will need to replace the values in the `version.yaml` file with the values you want to use for the application. For more information on building the application using GitLab refer to the section below.
+Icotray uses the file located at `<projroot>/assets/data/version.gitlab.yaml` to print out the information on the application version by default.
+Currently the file uses the GitLab variables, which will be replaced when running the GitLab pipeline. If you want to build the application locally, you will need to replace the values in the `version.yaml` file with the values you want to use for the application. Also, make sure the correct `version.yml` file is set in the `<projroot>/assets/data.go`. For more information on building the application using GitLab refer to the section below.
 
-Go is built in a way, that the source may be cross-compiled to support multiple Operating Systems and Architectures. For this Go uses the variables `GOOS` and `GOARCH` to determine, how to build the program and which files to use. Refer to [this file](https://github.com/golang/go/blob/go1.16.5/src/go/build/syslist.go) for supported OS and Architectures.  
+Go is built in a way, that the source may be cross-compiled to support multiple Operating Systems and Architectures. For this Go uses the variables `GOOS` and `GOARCH` to determine, how to build the program and which files to use. Refer to [this file](https://github.com/golang/go/blob/go1.16.5/src/go/build/syslist.go) for supported OS and Architectures. Although building the program for different operating systems than windows, it has not been tested. There will probably be some adjustments which will have to be made, before being able to build the program for different operating systems.  
 
 If you have decided which combination of `GOOS` and `GOARCH` to build the program for, following command may be run to build the program, when the current working directory is the root of the project directory.
 

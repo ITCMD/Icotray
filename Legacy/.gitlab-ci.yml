@@ -1,0 +1,66 @@
+image: golang:1.16.5
+
+variables:
+  IT_REPOSITORY: $IT_REPOSITORY
+  IT_VERSION: $CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA
+  IT_BINARY: icotray.exe
+  IT_GOOS_WIN: windows
+  IT_GOARCH_WIN: amd64
+
+before_script:
+  # output variables
+  - echo "----------------- VARIABLES -----------------"
+  - echo "IT_REPOSITORY   -->   $IT_REPOSITORY"
+  - echo "IT_VERSION      -->   $IT_VERSION"
+  - echo "IT_BINARY       -->   $IT_BINARY"
+  - echo "IT_GOOS_WIN     -->   $IT_GOOS_WIN"
+  - echo "IT_GOARCH_WIN   -->   $IT_GOARCH_WIN"
+  - echo "----------------- VARIABLES -----------------"
+
+  # install dependencies
+  - apt-get update -y
+  - apt-get install -y gettext
+
+  # create symlink from the $GOPATH/src folder to the repository
+  # in order to be able to run `go get`
+  - mkdir -p $GOPATH/src/$(dirname $IT_REPOSITORY)
+  - ln -svf $CI_PROJECT_DIR $GOPATH/src/$IT_REPOSITORY
+  - cd $GOPATH/src/$IT_REPOSITORY
+
+  # Populate version.yaml
+  - cd $GOPATH/src/$IT_REPOSITORY/assets/data
+  - envsubst < version.yaml > version.pop.yaml
+  - mv version.pop.yaml version.yaml
+  - cd $GOPATH/src/$IT_REPOSITORY
+
+  # Populate versioninfo.json
+  - cd $GOPATH/src/$IT_REPOSITORY/cmd/icotray
+  - envsubst < versioninfo.json > versioninfo.pop.json
+  - mv versioninfo.pop.json versioninfo.json
+  - cd $GOPATH/src/$IT_REPOSITORY
+
+stages:
+  - test
+  - build
+  - deploy
+
+format:windows:
+  variables:
+    GOOS: $IT_GOOS_WIN
+    GOARCH: $IT_GOARCH_WIN
+  stage: test
+  script:
+    - GOOS=$GOOS GOARCH=$GOARCH go fmt $(go list ./... | grep -v /vendor/)
+    - GOOS=$GOOS GOARCH=$GOARCH go vet $(go list ./... | grep -v /vendor/)
+    - GOOS=$GOOS GOARCH=$GOARCH go test $(go list ./... | grep -v /vendor/)
+
+compile:windows:
+  variables:
+    GOOS: $IT_GOOS_WIN
+    GOARCH: $IT_GOARCH_WIN
+  stage: build
+  script:
+    - GOOS=$GOOS GOARCH=$GOARCH go build -ldflags "-extldflags '-static'" -o $CI_PROJECT_DIR/$IT_BINARY ./cmd/icotray
+  artifacts:
+    paths:
+      - $IT_BINARY

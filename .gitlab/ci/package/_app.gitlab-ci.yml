@@ -1,0 +1,56 @@
+package/app:
+  stage: package
+  when: always
+  needs:
+    # windows
+    - job: "build/app->windows/amd64"
+      optional: true
+    - job: "build/app->windows/386"
+      optional: true
+    # linux
+    - job: "build/app->linux/amd64"
+      optional: true
+    - job: "build/app->linux/386"
+      optional: true
+    - job: "build/app->linux/arm64"
+      optional: true
+    - job: "build/app->linux/s390x"
+      optional: true
+    # darwin
+    - job: "build/app->darwin/amd64"
+      optional: true
+  image: alpine:latest
+  variables:
+    _PACKAGE_OUT_DIR: ./out.pkg
+    _PACKAGE_NAME: ""
+    _SET_PACKAGE_NAME_CMD: export _PACKAGE_NAME="$${_BINARY}_$${_VERSION}"
+  script:
+    - eval "$_SET_PACKAGE_NAME_CMD"
+
+    - |
+      # output job-specific variables
+      echo -e "----------------- PACKAGE/APP VARIABLES -----------------"
+      echo -e "_PACKAGE_OUT_DIR   -->   $_PACKAGE_OUT_DIR"
+      echo -e "_PACKAGE_NAME      -->   $_PACKAGE_NAME"
+      echo -e "----------------- PACKAGE/APP VARIABLES -----------------"
+
+    # install dependencies
+    - apk add zip
+
+    # create temporary directory for packaged files
+    - mkdir -p "$_PACKAGE_OUT_DIR"
+
+    # create zip
+    - zip -r "${_PACKAGE_OUT_DIR}/${_PACKAGE_NAME}.zip" "$_OUT_DIR"
+    # create tar
+    - tar cf "${_PACKAGE_OUT_DIR}/${_PACKAGE_NAME}.tar" --directory="$_OUT_DIR" .
+    # create tar.gz
+    - tar czf "${_PACKAGE_OUT_DIR}/${_PACKAGE_NAME}.tar.gz" --directory="$_OUT_DIR" .
+
+    - ls -lah
+    - ls -la $_PACKAGE_OUT_DIR
+    # move packaged files from temporary directory to out
+    - mv $_PACKAGE_OUT_DIR/* "$_OUT_DIR"
+  artifacts:
+    paths:
+      - "$_OUT_DIR/"

@@ -8,11 +8,12 @@ import (
 )
 
 type Configuration struct {
-	Title       string
-	IconPath    string
-	HoverText   string
-	ActionItems []ActionItem
-	AppendQuit  bool
+	Title         string
+	IconPath      string
+	HoverText     string
+	DefaultAction string
+	ActionItems   []ActionItem
+	AppendQuit    bool
 }
 
 type ActionItem struct {

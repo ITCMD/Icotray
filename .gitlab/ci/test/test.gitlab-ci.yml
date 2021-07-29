@@ -1,0 +1,11 @@
+include:
+  - local: /.gitlab/ci/test/_go.gitlab-ci.yml
+
+# test_stage is used as a sentinel for "Test" stage completion, so we can kick off jobs in later stages
+# without waiting for the completion of the Test stage
+test_stage:
+  stage: test
+  needs:
+    - prepare_stage
+  extends:
+    - .at_stage

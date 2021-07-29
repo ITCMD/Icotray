@@ -1,0 +1,55 @@
+.test/go: &test-go
+  stage: test
+  needs:
+    - prepare_stage
+  image: golang:1.16.5
+  script:
+    # preparations
+    - export _PLATFORM=$(echo "$CI_JOB_NAME" | grep -oP '(?<=test\/go->).*')
+    - export _GOOS=$(echo "$_PLATFORM" | cut -d '/' -f '1')
+    - export _GOARCH=$(echo "$_PLATFORM" | cut -d '/' -f '2')
+
+    # assign the GOOS and GOARCH variables
+    - export GOOS=$_GOOS
+    - export GOARCH=$_GOARCH
+
+    # format and vet the code
+    - go fmt $(go list ./... | grep -v /vendor/)
+    - go vet $(go list ./... | grep -v /vendor/)
+
+    # run the actual tests
+    - GOOS=$GOOS GOARCH=$GOARCH go test $(go list ./... | grep -v /vendor/)
+
+# windows
+test/go->windows/amd64:
+  extends:
+    - .test/go
+    - .rules/test-windows
+test/go->windows/386:
+  extends:
+    - .test/go
+    - .rules/test-windows
+
+# linux
+test/go->linux/amd64:
+  extends:
+    - .test/go
+    - .rules/test-linux
+test/go->linux/386:
+  extends:
+    - .test/go
+    - .rules/test-linux
+test/go->linux/arm64:
+  extends:
+    - .test/go
+    - .rules/test-linux
+test/go->linux/s390x:
+  extends:
+    - .test/go
+    - .rules/test-linux
+
+# darwin
+test/go->darwin/amd64:
+  extends:
+    - .test/go
+    - .rules/test-darwin

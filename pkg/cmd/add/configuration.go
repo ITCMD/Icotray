@@ -11,6 +11,7 @@ type Configuration struct {
 	title             string
 	iconPath          string
 	hoverText         string
+	DefaultAction     string
 	actionItems       map[string]string
 	actionItemNames   []string
 	actionItemActions []string
@@ -28,6 +29,7 @@ func configureFlags() {
 	Cmd.Flags().StringVarP(&config.title, "title", "t", "", `Title of the acticon { -t "<title text>" }`)
 	Cmd.Flags().StringVarP(&config.iconPath, "icon", "i", "", `Path to the icon to use for the acticon { -i "<path to icon>"}`)
 	Cmd.Flags().StringVarP(&config.hoverText, "hover", "o", "", `Text shown when hovering over the acticon { -o "<hover text>" }`)
+	Cmd.Flags().StringVarP(&config.DefaultAction, "default", "d", "", `Default action which will be executed when double-clicking the acticon { -d "<action>"`)
 	Cmd.Flags().StringToStringVarP(&config.actionItems, "actions", "a", map[string]string{}, `Menu-items providing the name of the item together with the action. { -a "<t1>"="<a1>","<t2>"="<a2>","<..>"="<..>" }`)
 	Cmd.Flags().StringArrayVarP(&config.actionItemNames, "item-name", "n", []string{}, `Alternative way to configure the menu-items. Must be used together with the 'item-action' flag. { -n "<t1>","<t2>","<..>"} `)
 	Cmd.Flags().StringArrayVarP(&config.actionItemActions, "item-action", "c", []string{}, `The action to associate with the 'item-name' flag. For each 'item-action' there must be an 'item-name'. { -c "<a1>","<a2>","<..>" }`)
@@ -43,6 +45,7 @@ func (config *Configuration) toActiconConfig() *acticon.Configuration {
 		Title:       config.title,
 		HoverText:   config.hoverText,
 		IconPath:    config.iconPath,
+		DefaultAction: config.DefaultAction,
 		ActionItems: config.extractActionItems(),
 		AppendQuit:  config.appendQuit,
 	}
@@ -57,6 +60,7 @@ func acticonConfigToCommand(config *acticon.Configuration) string {
 		stringToStringFlag("--icon", config.IconPath),
 		stringToStringFlag("--hover", config.HoverText),
 		boolToBoolFlag("--quittable", config.AppendQuit),
+		stringToStringFlag("--default", config.DefaultAction),
 		actionItemsToFlag("--actions", config.ActionItems),
 	}
 

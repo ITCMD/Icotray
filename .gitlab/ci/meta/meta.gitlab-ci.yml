@@ -1,0 +1,6 @@
+include:
+  - local: /.gitlab/ci/meta/_variables.gitlab-ci.yml
+  - local: /.gitlab/ci/meta/_before-script.gitlab-ci.yml
+  # hidden jobs and rules
+  - local: /.gitlab/ci/meta/_common.gitlab-ci.yml
+  - local: /.gitlab/ci/meta/_rules.gitlab-ci.yml

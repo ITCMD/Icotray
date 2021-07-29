@@ -38,7 +38,6 @@ in the system tray. Using the '--quittable' flag will ad an option to quit the p
 The key represents the title of the item and the key the action which will be run
 when clicking on the item.
 
-
 ## RUN MODES
 ### DEFAULT
 By default the actions will be run using the 'open with default program' method.
@@ -64,6 +63,12 @@ For this case you will have to escape the whitespace using a '\' (backslash).
 So >>"Name"="cmd:bash -c echo\ \"Hello\ World\"\ >\ ~/myfile.txt"<< will result in
     Program     :  "bash"
     Arguments   :  ["-c", "echo Hello World > ~/myfile.txt"]
+
+## Default Action
+By providing an action with the '--default' / '-d' flag, the action will be
+interpreted as the 'default' action. The action passed with the flag will
+be run when double-clicking the acticon. In order to open the context menu,
+the acticon will have to be right-clicked.
 
 
 # EXAMPLES

@@ -1,0 +1,11 @@
+include:
+  - local: /.gitlab/ci/build/_app.gitlab-ci.yml
+
+# build_stage is used as a sentinel for "Build" stage completion, so we can kick off jobs in later stages
+# without waiting for the completion of the Build stage
+build_stage:
+  stage: build
+  needs:
+    - test_stage
+  extends:
+    - .at_stage

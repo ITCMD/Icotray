@@ -1,0 +1,8 @@
+# release_stage is used as a sentinel for "Release" stage completion, so we can kick off jobs in later stages
+# without waiting for the completion of the Release stage
+release_stage:
+  stage: release
+  needs:
+    - package_stage
+  extends:
+    - .at_stage

@@ -1,0 +1,27 @@
+# variables fragment
+.#variables:
+  # variables set through the project
+  .#variables/project:
+    variables: &variables-project-variables
+      _REPOSITORY: $_REPOSITORY
+
+  # repository specific variables
+  .#variables/repo:
+    variables: &variables-repo-variables
+      _VERSION: $CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA
+
+  # system variables
+  .#variables/sys:
+    variables: &variables-sys-variables
+      _BINARY: icotray
+      _TARGETS: "{windows}"
+      _OUT_DIR: ./out
+
+  # variables will be merged with the ones of the extended jobs
+  variables: &variables-variables
+    <<: *variables-project-variables
+    <<: *variables-repo-variables
+    <<: *variables-sys-variables
+
+# set the global variables
+variables: *variables-variables

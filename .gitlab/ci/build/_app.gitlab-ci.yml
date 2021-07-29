@@ -1,0 +1,108 @@
+.build:prepare/deps:
+  script: &prepare-deps-script
+    # install dependencies
+    # update index
+    - apt-get update -y
+    - apt-get install -y gettext
+
+.build:prepare/goproj:
+  script: &prepare-goproj-script
+    # create symlink from the $GOPATH/src folder to the repository
+    # in order to be able to run `go get`
+    - mkdir -p $GOPATH/src/$(dirname $_REPOSITORY)
+    - ln -svf $CI_PROJECT_DIR $GOPATH/src/$_REPOSITORY
+    - cd $GOPATH/src/$_REPOSITORY
+    - mkdir -p ./out
+
+.build:prepare/version:
+  script: &prepare-version-script
+    - cd $GOPATH/src/$_REPOSITORY/assets/data
+    - envsubst < version.gitlab.yml > version.gitlab.pop.yaml
+    - mv version.gitlab.pop.yaml version.gitlab.yml
+    - cd $GOPATH/src/$_REPOSITORY
+
+.build:prepare/versioninfo:
+  script: &prepare-versioninfo-script
+    - cd $GOPATH/src/$_REPOSITORY/cmd/icotray
+    - envsubst < versioninfo.gitlab.json > versioninfo.gitlab.pop.json
+    - mv versioninfo.gitlab.pop.json versioninfo.gitlab.json
+    - cd $GOPATH/src/$_REPOSITORY
+
+.build/app: &build-app
+  stage: build
+  needs:
+    - test_stage
+  image: golang:1.16.5
+  variables:
+    _BINARY_EXTENSIONS: "{windows->.exe}"
+    _BINARY_EXTENSION: ""
+    _BINARY_NAME: ""
+    _SET_BINARY_NAME_CMD: export _BINARY_NAME="$${_BINARY}_$${GOOS}_$${GOARCH}$${_BINARY_EXTENSION}"
+  script:
+    - *prepare-deps-script
+    - *prepare-goproj-script
+    - *prepare-version-script
+    # - *prepare-versioninfo-script
+    # utilize the information from the CI_JOB_NAME
+    - export _PLATFORM=$(echo "$CI_JOB_NAME" | grep -oP '(?<=build\/app->).*')
+    - export _GOOS=$(echo "$_PLATFORM" | cut -d '/' -f '1')
+    - export _GOARCH=$(echo "$_PLATFORM" | cut -d '/' -f '2')
+    - export _BINARY_EXTENSION=$(echo "$_BINARY_EXTENSIONS" | grep -oP "(?<={${_GOOS}->).*?(?=})")
+
+    # assign the GOOS and GOARCH variables
+    - export GOOS=$_GOOS
+    - export GOARCH=$_GOARCH
+
+    # assign the _BINARY_NAME variable
+    - eval "$_SET_BINARY_NAME_CMD"
+
+    - |
+      # output job-specific variables
+      echo -e "----------------- BUILD/APP VARIABLES -----------------"
+      echo -e "_PLATFORM            -->   $_PLATFORM"
+      echo -e "_GOOS                -->   $_GOOS"
+      echo -e "_GOARCH              -->   $_GOARCH"
+      echo -e "_BINARY_EXTENSION    -->   $_BINARY_EXTENSION"
+      echo -e "_BINARY_NAME         -->   $_BINARY_NAME"
+      echo -e "----------------- BUILD/APP VARIABLES -----------------"
+
+    # build the binary
+    - GOOS=$GOOS GOARCH=$GOARCH go build -ldflags "-extldflags '-static'" -o $CI_PROJECT_DIR/out/$_BINARY_NAME ./cmd/icotray
+  artifacts:
+    name: "$CI_JOB_NAME-$_VERSION"
+    paths:
+      - "$_OUT_DIR/"
+
+# windows
+build/app->windows/amd64:
+  extends:
+    - .build/app
+    - .rules/build-windows
+build/app->windows/386:
+  extends:
+    - .build/app
+    - .rules/build-windows
+
+# linux
+build/app->linux/amd64:
+  extends:
+    - .build/app
+    - .rules/build-linux
+build/app->linux/386:
+  extends:
+    - .build/app
+    - .rules/build-linux
+build/app->linux/arm64:
+  extends:
+    - .build/app
+    - .rules/build-linux
+build/app->linux/s390x:
+  extends:
+    - .build/app
+    - .rules/build-linux
+
+# darwin
+build/app->darwin/amd64:
+  extends:
+    - .build/app
+    - .rules/build-darwin

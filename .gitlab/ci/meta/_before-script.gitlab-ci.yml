@@ -1,0 +1,10 @@
+before_script: &before-script
+  - |
+    # output variables
+    echo -e "----------------- VARIABLES -----------------"
+    echo -e "_REPOSITORY    -->    $_REPOSITORY"
+    echo -e "_VERSION       -->    $_VERSION"
+    echo -e "_BINARY        -->    $_BINARY"
+    echo -e "_TARGETS       -->    $_TARGETS"
+    echo -e "_OUT_DIR       -->    $_OUT_DIR"
+    echo -e "----------------- VARIABLES -----------------"
