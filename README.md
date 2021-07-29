@@ -14,7 +14,7 @@ If you detect any bugs, please report them on the issues page.
 
 - [Icotray](#icotray)
   - [Table of Contents](#table-of-contents)
-  - [Legacy Edition](#Legacy Edition)
+  - [Legacy Edition](#legacy-edition)
   - [Usage](#usage)
     - [Root Command](#root-command)
     - [Add Command](#add-command)
@@ -29,7 +29,7 @@ If you detect any bugs, please report them on the issues page.
 
 ## Legacy Edition
 
-The legacy edition of this code is more compatible with non-windows systems, such as a Unix environment. With some simple modifications, it could be built for such systems. The newer edition uses a Microsoft API that is incompatible with other systems. As such, the Legacy edition is available in the [Legacy]() folder for those wishing to build for such environments. We would love to include a release for a Unix environment, so if anyone would like to volunteer to do so, let us know.
+The legacy edition of this code is more compatible with non-windows systems, such as a Unix environment. With some simple modifications, it could be built for such systems. The newer edition uses a Microsoft API that is incompatible with other systems. As such, the Legacy edition is available in the [Legacy](https://github.com/ITCMD/Icotray/tree/main/Legacy) folder for those wishing to build for such environments. We would love to include a release for a Unix environment, so if anyone would like to volunteer to do so, let us know.
 
 ## Usage
 
