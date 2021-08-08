@@ -50,7 +50,7 @@ func BufferCountEvery(in <-chan interface{}, bufferSize int, startBufferEvery in
 	go func() {
 		for value := range in {
 			// add a new buffer if the inCount reaches a multiple of startBufferEvery
-			if inCount % startBufferEvery == 0 {
+			if inCount%startBufferEvery == 0 {
 				buffers = append(buffers, make([]interface{}, 0))
 			}
 
@@ -65,8 +65,8 @@ func BufferCountEvery(in <-chan interface{}, bufferSize int, startBufferEvery in
 
 					// remove the buffer at i by replacing it with the last element
 					// then assigning the buffer to the range until the moved element
-					buffers[i] = buffers[len(buffers) - 1]
-					buffers = buffers[:len(buffers) - 1]
+					buffers[i] = buffers[len(buffers)-1]
+					buffers = buffers[:len(buffers)-1]
 				}
 			}
 

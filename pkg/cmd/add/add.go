@@ -10,7 +10,7 @@ import (
 )
 
 var Cmd = &cobra.Command{
-	Use:   "add [<identifier>]",
+	Use:   "add",
 	Short: "Adds an acticon to the system tray",
 	Long: `
 Adds an acticon to the system tray.

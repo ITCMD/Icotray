@@ -42,12 +42,12 @@ func configureFlags() {
 func (config *Configuration) toActiconConfig() *acticon.Configuration {
 
 	acticonConfig := &acticon.Configuration{
-		Title:       config.title,
-		HoverText:   config.hoverText,
-		IconPath:    config.iconPath,
+		Title:         config.title,
+		HoverText:     config.hoverText,
+		IconPath:      config.iconPath,
 		DefaultAction: config.DefaultAction,
-		ActionItems: config.extractActionItems(),
-		AppendQuit:  config.appendQuit,
+		ActionItems:   config.extractActionItems(),
+		AppendQuit:    config.appendQuit,
 	}
 
 	return acticonConfig

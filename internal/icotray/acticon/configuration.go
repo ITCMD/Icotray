@@ -2,7 +2,9 @@ package acticon
 
 import (
 	"fmt"
+	"github.com/lxn/walk"
 	"icotray/internal/icotray/acticon/action"
+	"icotray/internal/icotray/acticon/icon"
 	"icotray/internal/pkg/file"
 	"strings"
 )
@@ -35,6 +37,49 @@ func (config *Configuration) IsValid() (bool, error) {
 	}
 
 	return true, nil
+}
+
+func (config *Configuration) getIcon() (*walk.Icon, error) {
+	var resultIcon *walk.Icon
+
+	// get the bytes of the icon
+	imageBytes, err := icon.ImportIcon(config.IconPath)
+	if err != nil {
+		return nil, err
+	}
+
+	// verify the file mime type of the bytes
+	mimeType := file.ExtractMimeTypeFromBytes(imageBytes)
+	if isValid, err := icon.IsValidMimeType(mimeType); !isValid || err != nil {
+		if err != nil {
+			return nil, err
+		}
+
+		return nil, fmt.Errorf("the provided file type for the icon is invalid")
+	}
+
+	tempFilePath, err := icon.CreateTemporaryFile(imageBytes)
+	if err != nil {
+		return nil, err
+	}
+
+	// create a walk.Icon from the image
+	resultIcon, err = walk.NewIconFromFile(tempFilePath)
+	if err != nil {
+		return nil, fmt.Errorf("could not create the icon from the image: %v", err)
+	}
+
+	return resultIcon, nil
+}
+
+func (actionItem *ActionItem) ExecuteWithOutput() {
+	out, err := actionItem.Execute()
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	fmt.Print(out)
 }
 
 func (actionItem *ActionItem) Execute() (string, error) {

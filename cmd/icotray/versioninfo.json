@@ -21,7 +21,7 @@
   "StringFileInfo": {
     "Comments": "This application was developed for ITCMD",
     "CompanyName": "ITCMD",
-    "FileDescription": "CLI tool - Custom system tray icons",
+    "FileDescription": "Icotray",
     "FileVersion": "2.0.0.0",
     "InternalName": "icotray.exe",
     "LegalCopyright": "Copyright (c) - ITCMD",

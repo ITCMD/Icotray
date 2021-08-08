@@ -23,8 +23,8 @@ func Capacity(in <-chan interface{}, capacity int, duration time.Duration, allow
 		removeExpiredUsedTimes := func() {
 			for i := 0; i < len(usedTimes); i++ {
 				if time.Now().Sub(usedTimes[i]) <= duration {
-					usedTimes[i] = usedTimes[len(usedTimes) - 1]
-					usedTimes = usedTimes[:len(usedTimes) - 1]
+					usedTimes[i] = usedTimes[len(usedTimes)-1]
+					usedTimes = usedTimes[:len(usedTimes)-1]
 				}
 			}
 		}
