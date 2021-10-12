@@ -31,8 +31,8 @@ func configureFlags() {
 	Cmd.Flags().StringVarP(&config.hoverText, "hover", "o", "", `Text shown when hovering over the acticon { -o "<hover text>" }`)
 	Cmd.Flags().StringVarP(&config.DefaultAction, "default", "d", "", `Default action which will be executed when double-clicking the acticon { -d "<action>"`)
 	Cmd.Flags().StringToStringVarP(&config.actionItems, "actions", "a", map[string]string{}, `Menu-items providing the name of the item together with the action. { -a "<t1>"="<a1>","<t2>"="<a2>","<..>"="<..>" }`)
-	Cmd.Flags().StringArrayVarP(&config.actionItemNames, "item-name", "n", []string{}, `Alternative way to configure the menu-items. Must be used together with the 'item-action' flag. { -n "<t1>","<t2>","<..>"} `)
-	Cmd.Flags().StringArrayVarP(&config.actionItemActions, "item-action", "c", []string{}, `The action to associate with the 'item-name' flag. For each 'item-action' there must be an 'item-name'. { -c "<a1>","<a2>","<..>" }`)
+	Cmd.Flags().StringSliceVarP(&config.actionItemNames, "item-name", "n", []string{}, `Alternative way to configure the menu-items. Must be used together with the 'item-action' flag. { -n "<t1>","<t2>","<..>"} `)
+	Cmd.Flags().StringSliceVarP(&config.actionItemActions, "item-action", "c", []string{}, `The action to associate with the 'item-name' flag. For each 'item-action' there must be an 'item-name'. { -c "<a1>","<a2>","<..>" }`)
 	Cmd.Flags().BoolVarP(&config.appendQuit, "quittable", "q", false, "Whether to append a 'quit' Option to the acticon or not { -q }")
 
 	Cmd.Flags().BoolVarP(&config.runInteractively, "interactive", "r", false, "Build the acticon interactively { -r }")

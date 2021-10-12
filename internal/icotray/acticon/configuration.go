@@ -72,25 +72,6 @@ func (config *Configuration) getIcon() (*walk.Icon, error) {
 	return resultIcon, nil
 }
 
-func (actionItem *ActionItem) ExecuteWithOutput() {
-	out, err := actionItem.Execute()
-
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	fmt.Print(out)
-}
-
-func (actionItem *ActionItem) Execute() (string, error) {
-	out, err := action.Execute(actionItem.Action)
-	if err != nil {
-		return "", fmt.Errorf("could not execute action: %v", err)
-	}
-
-	outStr := string(out)
-	if len(outStr) < 1 {
-		outStr = "<no output>"
-	}
-	return fmt.Sprintf("action executed: %v \n", outStr), nil
+func (actionItem *ActionItem) Execute() {
+	action.ExecuteVerbosely(actionItem.Action)
 }

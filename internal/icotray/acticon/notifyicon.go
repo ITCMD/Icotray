@@ -47,6 +47,8 @@ func createAndConfigureNotifyIcon(mainWindow *walk.MainWindow, config *Configura
 
 func addMenuItems(config *Configuration, notifyIcon *walk.NotifyIcon) error {
 	for _, actionItem := range config.ActionItems {
+		actionItem := actionItem
+
 		action, err := addMenuItem(actionItem, notifyIcon)
 		if err != nil {
 			return err
@@ -54,7 +56,7 @@ func addMenuItems(config *Configuration, notifyIcon *walk.NotifyIcon) error {
 
 		// report any triggers to the channel
 		action.Triggered().Attach(func() {
-			actionItem.ExecuteWithOutput()
+			actionItem.Execute()
 		})
 	}
 
@@ -122,7 +124,7 @@ func configureDefaultAction(window *walk.MainWindow, notifyIcon *walk.NotifyIcon
 		}
 
 		primaryClickActionFn = func() {
-			defaultActionItem.ExecuteWithOutput()
+			defaultActionItem.Execute()
 		}
 	} else {
 		primaryClickActionFn = func() {
